@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ink UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ink-card-style-kit.css">
+<style>
+  html, body { height: 100%; }
+  body { font-family: var(--ink-font-ui); }
+
+  /* Docs-specific */
+  .section { margin-bottom: 56px; }
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  .section-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--ink-black);
+    color: var(--ink-white);
+    font-size: 13px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
+  .section-desc { font-size: 14px; color: var(--ink-text-secondary); margin-bottom: 24px; line-height: 1.6; max-width: 640px; }
+
+  /* Swatch grid */
+  .swatch-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .swatch { border: 1.5px solid var(--ink-black); border-radius: var(--ink-radius); overflow: hidden; }
+  .swatch-color { height: 90px; }
+  .swatch-info { padding: 10px 12px; border-top: 1.5px solid var(--ink-black); }
+  .swatch-name { font-family: var(--ink-font-mono); font-size: 11px; font-weight: 600; color: var(--ink-text); }
+  .swatch-desc { font-size: 10px; color: var(--ink-text-muted); margin-top: 1px; }
+
+  /* Type scale demo */
+  .type-demo {
+    border: 1.5px solid var(--ink-black);
+    border-radius: var(--ink-radius-lg);
+    overflow: hidden;
+  }
+  .type-demo-header {
+    background: var(--ink-black);
+    color: var(--ink-white);
+    padding: 8px 16px;
+    font-size: 10px;
+    font-family: var(--ink-font-mono);
+    letter-spacing: .06em;
+  }
+  .type-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--ink-divider);
+  }
+  .type-row:last-child { border-bottom: none; }
+  .type-meta { font-size: 10px; font-family: var(--ink-font-mono); color: var(--ink-text-muted); width: 140px; flex-shrink: 0; }
+  .type-sample { flex: 1; color: var(--ink-text); }
+
+  /* Component demos */
+  .demo-box {
+    border: 1.5px solid var(--ink-black);
+    border-radius: var(--ink-radius-lg);
+    padding: 28px;
+    background: var(--ink-white);
+  }
+  .demo-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: var(--ink-text-muted);
+    margin-bottom: 14px;
+  }
+  .demo-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+  .demo-row:last-child { margin-bottom: 0; }
+
+  /* Fixed layout for docs */
+  .app-shell { display: flex; height: 100vh; overflow: hidden; }
+  .sidebar    { width: 248px; flex-shrink: 0; display: flex; flex-direction: column; border-right: 2px solid var(--ink-black); background: var(--ink-white); overflow-y: auto; }
+  .main       { flex: 1; overflow-y: auto; background: var(--ink-bg); }
+  .main-inner { max-width: 760px; padding: 40px 48px; }
+
+  /* Sidebar internals */
+  .sb-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 2px solid var(--ink-black);
+    position: sticky; top: 0; background: var(--ink-white); z-index: 10;
+  }
+  .sb-brand { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+  .sb-version { font-size: 9px; font-family: var(--ink-font-mono); color: var(--ink-text-muted); }
+  .sb-section { padding: 12px 20px 2px; }
+  .sb-section-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: var(--ink-text-muted); margin-bottom: 2px; }
+  .sb-link {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 0; border-bottom: 1px solid var(--ink-divider);
+    font-size: 13px; color: var(--ink-text); cursor: pointer;
+    text-decoration: none;
+  }
+  .sb-link:hover { color: var(--ink-black); }
+  .sb-link.active { font-weight: 600; }
+  .sb-footer {
+    margin-top: auto; padding: 10px 20px;
+    border-top: 1px solid var(--ink-200);
+    font-size: 9px; font-family: var(--ink-font-mono); color: var(--ink-text-muted);
+  }
+</style>
+</head>
+<body class="ink-root">
+<div class="app-shell">
+
+  <!-- Sidebar nav -->
+  <nav class="sidebar">
+    <div class="sb-header">
+      <span class="sb-brand">INK UI KIT</span>
+      <span class="sb-version">v0.1</span>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-label">Foundations</div>
+      <a href="#colors"    class="sb-link">Colors <span style="color:var(--ink-300)">›</span></a>
+      <a href="#type"      class="sb-link">Typography <span style="color:var(--ink-300)">›</span></a>
+      <a href="#spacing"   class="sb-link">Spacing &amp; radius <span style="color:var(--ink-300)">›</span></a>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-label">Components</div>
+      <a href="#buttons"   class="sb-link">Buttons <span style="color:var(--ink-300)">›</span></a>
+      <a href="#chips"     class="sb-link">Chips <span style="color:var(--ink-300)">›</span></a>
+      <a href="#badges"    class="sb-link">Badges &amp; tags <span style="color:var(--ink-300)">›</span></a>
+      <a href="#cards"     class="sb-link">Cards <span style="color:var(--ink-300)">›</span></a>
+      <a href="#panel"     class="sb-link">E-ink panel <span style="color:var(--ink-300)">›</span></a>
+      <a href="#lists"     class="sb-link">Lists <span style="color:var(--ink-300)">›</span></a>
+      <a href="#empty"     class="sb-link">Empty state <span style="color:var(--ink-300)">›</span></a>
+      <a href="#tabs"      class="sb-link active">Tab bar <span style="color:var(--ink-300)">›</span></a>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-label">Reference</div>
+      <a href="#utilities" class="sb-link">Utility classes <span style="color:var(--ink-300)">›</span></a>
+    </div>
+
+    <div class="sb-footer">ink-card-style-kit.css · 1 colour · 2px</div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="main">
+    <div class="main-inner">
+
+      <div style="margin-bottom:40px">
+        <div class="ink-eyebrow" style="margin-bottom:10px">VERSION 0.1 · MONOCHROME</div>
+        <h1 class="ink-h1" style="margin-bottom:16px">Ink UI Kit</h1>
+        <p class="ink-body" style="max-width:580px;margin-bottom:10px">
+          A one-colour component kit for apps that talk to e-paper displays.
+          Pure black on warm off-white, a heavy 2px border as the signature,
+          pill controls, and a panel component that renders like a 1-bit screen.
+          Drop in <span class="ink-tag">ink-card-style-kit.css</span> and use
+          the class names shown below.
+        </p>
+      </div>
+
+      <!-- COLORS -->
+      <section id="colors" class="section">
+        <div class="section-heading">
+          <div class="section-num">1</div>
+          <h2 class="section-title">Colors</h2>
+        </div>
+        <p class="section-desc">There is no accent hue. Hierarchy comes entirely from value: black for action and emphasis, three greys for text, two for lines, one off-white ground.</p>
+
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="swatch-color" style="background:#111111"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--ink-black</div>
+              <div class="swatch-desc">#111111 · text, fills, active</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background:#1a1a1a"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--ink-900</div>
+              <div class="swatch-desc">#1a1a1a · heavy borders</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background:#444444"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--ink-700</div>
+              <div class="swatch-desc">#444444 · secondary text</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background:#8a8a8a"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--ink-500</div>
+              <div class="swatch-desc">#8a8a8a · captions, eyebrows</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background:#d6d6d6"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--ink-300</div>
+              <div class="swatch-desc">#d6d6d6 · hairlines</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background:#ececec"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--ink-200</div>
+              <div class="swatch-desc">#ececec · soft dividers</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background:#f5f5f3"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--ink-100</div>
+              <div class="swatch-desc">#f5f5f3 · page ground</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background:#ffffff;border-bottom:1.5px solid #d6d6d6"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">--ink-white</div>
+              <div class="swatch-desc">#ffffff · surfaces, paper</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TYPOGRAPHY -->
+      <section id="type" class="section">
+        <div class="section-heading">
+          <div class="section-num">2</div>
+          <h2 class="section-title">Typography</h2>
+        </div>
+        <p class="section-desc">Three faces with three jobs. A tight grotesk carries the interface, a serif is reserved for quoted text on the panel, and a mono handles anything numeric.</p>
+
+        <div class="type-demo">
+          <div class="type-demo-header">Type scale</div>
+          <div class="type-row">
+            <div class="type-meta">.ink-eyebrow · 11px / .18em</div>
+            <div class="type-sample ink-eyebrow">INK CARD LIBRARY</div>
+          </div>
+          <div class="type-row" style="border-bottom:1px solid #111;margin:0 -1.5px;padding:12px 17.5px;">
+            <div class="type-meta">.ink-h1 · 36px / -3%</div>
+            <div class="type-sample ink-h1">Display heading</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta">.ink-h2 · 28px / -2%</div>
+            <div class="type-sample ink-h2">Section heading</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta">.ink-h3 · 22px</div>
+            <div class="type-sample ink-h3">Card heading</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta">.ink-h4 · 18px</div>
+            <div class="type-sample ink-h4">Label heading</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta">.ink-body · 13px</div>
+            <div class="type-sample">Body text runs at 13px with a 1.6 line-height for comfortable reading in dense data interfaces.</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta">.ink-mono · mono</div>
+            <div class="type-sample ink-mono" style="font-size:16px">14,823 · 98.6% · $1,204,500</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta">.ink-serif · italic</div>
+            <div class="type-sample ink-serif" style="font-size:15px">"Property at intersection of technology and place."</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta">.ink-caption · 10px</div>
+            <div class="type-sample ink-caption">Last updated 2026-09-17 · run_date 2026-06-01</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SPACING -->
+      <section id="spacing" class="section">
+        <div class="section-heading">
+          <div class="section-num">3</div>
+          <h2 class="section-title">Spacing &amp; radius</h2>
+        </div>
+        <p class="section-desc">4px base unit. Radii from none (flat cards) to pill (chips and buttons).</p>
+        <div class="demo-box">
+          <div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:24px;flex-wrap:wrap">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px" v-for="s in spaces">
+              <div style="background:var(--ink-black);width:100%" id="s1"  style="height:4px"></div>
+            </div>
+            <!-- Manual spacing bars -->
+            <div style="text-align:center"><div style="background:var(--ink-black);width:4px;height:4px;margin:0 auto"></div><div class="ink-caption" style="margin-top:4px">4px</div></div>
+            <div style="text-align:center"><div style="background:var(--ink-black);width:8px;height:8px;margin:0 auto"></div><div class="ink-caption" style="margin-top:4px">8px</div></div>
+            <div style="text-align:center"><div style="background:var(--ink-black);width:12px;height:12px;margin:0 auto"></div><div class="ink-caption" style="margin-top:4px">12px</div></div>
+            <div style="text-align:center"><div style="background:var(--ink-black);width:16px;height:16px;margin:0 auto"></div><div class="ink-caption" style="margin-top:4px">16px</div></div>
+            <div style="text-align:center"><div style="background:var(--ink-black);width:20px;height:20px;margin:0 auto"></div><div class="ink-caption" style="margin-top:4px">20px</div></div>
+            <div style="text-align:center"><div style="background:var(--ink-black);width:24px;height:24px;margin:0 auto"></div><div class="ink-caption" style="margin-top:4px">24px</div></div>
+            <div style="text-align:center"><div style="background:var(--ink-black);width:32px;height:32px;margin:0 auto"></div><div class="ink-caption" style="margin-top:4px">32px</div></div>
+          </div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+            <div style="text-align:center"><div style="width:36px;height:36px;border:2px solid var(--ink-black);border-radius:4px"></div><div class="ink-caption" style="margin-top:4px">sm 4px</div></div>
+            <div style="text-align:center"><div style="width:36px;height:36px;border:2px solid var(--ink-black);border-radius:6px"></div><div class="ink-caption" style="margin-top:4px">base 6px</div></div>
+            <div style="text-align:center"><div style="width:36px;height:36px;border:2px solid var(--ink-black);border-radius:12px"></div><div class="ink-caption" style="margin-top:4px">lg 12px</div></div>
+            <div style="text-align:center"><div style="width:72px;height:36px;border:2px solid var(--ink-black);border-radius:999px"></div><div class="ink-caption" style="margin-top:4px">pill</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BUTTONS -->
+      <section id="buttons" class="section">
+        <div class="section-heading">
+          <div class="section-num">4</div>
+          <h2 class="section-title">Buttons</h2>
+        </div>
+        <p class="section-desc">Three variants share the same 2px border. Pill modifier rounds to the brand radius. Sizes: sm / default / lg.</p>
+        <div class="demo-box ink-stack ink-stack-4">
+          <div class="demo-label">Variants</div>
+          <div class="demo-row">
+            <button class="ink-btn ink-btn-primary">Primary</button>
+            <button class="ink-btn ink-btn-ghost">Ghost</button>
+            <button class="ink-btn ink-btn-muted">Muted</button>
+            <button class="ink-btn ink-btn-primary" disabled>Disabled</button>
+          </div>
+          <div class="demo-label">Pill</div>
+          <div class="demo-row">
+            <button class="ink-btn ink-btn-primary ink-btn-pill">Search</button>
+            <button class="ink-btn ink-btn-ghost ink-btn-pill">Cancel</button>
+          </div>
+          <div class="demo-label">Sizes</div>
+          <div class="demo-row" style="align-items:flex-end">
+            <button class="ink-btn ink-btn-primary ink-btn-sm">Small</button>
+            <button class="ink-btn ink-btn-primary">Default</button>
+            <button class="ink-btn ink-btn-primary ink-btn-lg">Large</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHIPS -->
+      <section id="chips" class="section">
+        <div class="section-heading">
+          <div class="section-num">5</div>
+          <h2 class="section-title">Chips</h2>
+        </div>
+        <p class="section-desc">Pill-shaped selectors for filters and toggles. Active state inverts to black fill.</p>
+        <div class="demo-box">
+          <div class="demo-row">
+            <div class="ink-chip active">All</div>
+            <div class="ink-chip">House</div>
+            <div class="ink-chip">Unit</div>
+            <div class="ink-chip">Townhouse</div>
+            <div class="ink-chip">Land</div>
+          </div>
+          <div class="demo-row" style="margin-top:8px">
+            <div class="ink-chip"><span class="ink-chip-dot"></span>Top Profit</div>
+            <div class="ink-chip active"><span class="ink-chip-dot"></span>Top Loss</div>
+            <div class="ink-chip">Best %</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BADGES -->
+      <section id="badges" class="section">
+        <div class="section-heading">
+          <div class="section-num">6</div>
+          <h2 class="section-title">Badges &amp; tags</h2>
+        </div>
+        <p class="section-desc">Badges are uppercase status labels. Tags are monospace code-style annotations.</p>
+        <div class="demo-box">
+          <div class="demo-row">
+            <span class="ink-badge ink-badge-fill">NEW</span>
+            <span class="ink-badge ink-badge-outline">NSW</span>
+            <span class="ink-badge ink-badge-muted">SUBURB</span>
+            <span class="ink-badge ink-badge-fill">MAPE</span>
+            <span class="ink-badge ink-badge-outline">HOUSE</span>
+          </div>
+          <div class="demo-row" style="margin-top:10px">
+            <span class="ink-tag">--ink-black</span>
+            <span class="ink-tag">2026-06-01</span>
+            <span class="ink-tag">read_parquet()</span>
+            <span class="ink-tag">WAL · Litestream</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- CARDS -->
+      <section id="cards" class="section">
+        <div class="section-heading">
+          <div class="section-num">7</div>
+          <h2 class="section-title">Cards</h2>
+        </div>
+        <p class="section-desc">Default rounds, flat for grid layouts, raised adds an offset shadow to simulate lifted paper.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+          <div class="ink-card">
+            <div class="ink-card-header ink-eyebrow">Default</div>
+            <div class="ink-card-body">
+              <div class="ink-h4">Mosman NSW</div>
+              <div class="ink-body-sm ink-secondary" style="margin-top:4px">Postcode 2088 · House</div>
+              <div class="ink-mono" style="font-size:20px;margin-top:12px">$5.1M</div>
+            </div>
+          </div>
+          <div class="ink-card ink-card-flat">
+            <div class="ink-card-header ink-eyebrow">Flat</div>
+            <div class="ink-card-body">
+              <div class="ink-h4">SA2 · Surry Hills</div>
+              <div class="ink-body-sm ink-secondary" style="margin-top:4px">MAPE 14.2% · n=47</div>
+              <div class="ink-mono" style="font-size:20px;margin-top:12px">14.2%</div>
+            </div>
+          </div>
+          <div class="ink-card ink-card-raised">
+            <div class="ink-card-header ink-eyebrow">Raised</div>
+            <div class="ink-card-body">
+              <div class="ink-h4">Deal · Newtown</div>
+              <div class="ink-body-sm ink-secondary" style="margin-top:4px">3yr hold · House</div>
+              <div class="ink-mono" style="font-size:20px;margin-top:12px;color:var(--ink-text)">+$840K</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- E-INK PANEL -->
+      <section id="panel" class="section">
+        <div class="section-heading">
+          <div class="section-num">8</div>
+          <h2 class="section-title">E-ink panel</h2>
+        </div>
+        <p class="section-desc">The signature component. Heavy 2px border, inverted header, optional dithered fill. Designed to feel like a 1-bit display readout.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="ink-panel">
+            <div class="ink-panel-header">
+              <span class="ink-panel-header-title">Weekly Review</span>
+              <span style="font-size:9px;font-family:monospace;opacity:.7">2026-06-01</span>
+            </div>
+            <div class="ink-panel-body">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div class="ink-panel-stat">
+                  <div class="ink-panel-stat-label">Median price</div>
+                  <div class="ink-panel-stat-value">$5.1M</div>
+                  <div class="ink-panel-stat-delta">+8.4% YoY</div>
+                </div>
+                <div class="ink-panel-stat">
+                  <div class="ink-panel-stat-label">Sales (12M)</div>
+                  <div class="ink-panel-stat-value">231</div>
+                  <div class="ink-panel-stat-delta">−12 vs prev</div>
+                </div>
+              </div>
+            </div>
+            <div class="ink-panel-status">
+              <span class="ink-panel-status-dot"></span>
+              Mosman · NSW · House
+            </div>
+          </div>
+
+          <div class="ink-panel ink-panel-dither">
+            <div class="ink-panel-header">
+              <span class="ink-panel-header-title">MAPE Analysis</span>
+            </div>
+            <div class="ink-panel-body">
+              <div class="ink-panel-stat" style="margin-bottom:12px">
+                <div class="ink-panel-stat-label">Median MAPE</div>
+                <div class="ink-panel-stat-value">14.2%</div>
+                <div class="ink-panel-stat-delta">IQR 8.1% – 22.7%</div>
+              </div>
+              <div style="font-size:10px;color:var(--ink-text-muted);font-family:monospace">
+                n=47 · run 2026-06-01
+              </div>
+            </div>
+            <div class="ink-panel-status">
+              <span class="ink-panel-status-dot"></span>
+              Dithered variant
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LISTS -->
+      <section id="lists" class="section">
+        <div class="section-heading">
+          <div class="section-num">9</div>
+          <h2 class="section-title">Lists</h2>
+        </div>
+        <p class="section-desc">Dashed dividers keep visual weight low. The arrow caret indicates drill-down.</p>
+        <div class="demo-box" style="padding:0">
+          <ul class="ink-list" style="padding:0 20px">
+            <li class="ink-list-item">
+              <span class="ink-list-label">Mosman NSW 2088</span>
+              <span class="ink-list-meta">$5.1M</span>
+              <span class="ink-list-arrow">›</span>
+            </li>
+            <li class="ink-list-item">
+              <span class="ink-list-label">Vaucluse NSW 2030</span>
+              <span class="ink-list-meta">$7.4M</span>
+              <span class="ink-list-arrow">›</span>
+            </li>
+            <li class="ink-list-item">
+              <span class="ink-list-label">Surry Hills NSW 2010</span>
+              <span class="ink-list-meta">$1.2M</span>
+              <span class="ink-list-arrow">›</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- EMPTY STATE -->
+      <section id="empty" class="section">
+        <div class="section-heading">
+          <div class="section-num">10</div>
+          <h2 class="section-title">Empty state</h2>
+        </div>
+        <p class="section-desc">Empty states direct action rather than apologising. Icon stays muted so it doesn't dominate.</p>
+        <div class="demo-box">
+          <div class="ink-empty">
+            <div class="ink-empty-icon">◫</div>
+            <div class="ink-empty-title">No deals found</div>
+            <div class="ink-empty-body">Search a suburb to see top capital gains and losses over the past 5 years.</div>
+            <button class="ink-btn ink-btn-primary ink-btn-pill" style="margin-top:8px">Search suburb</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TABS -->
+      <section id="tabs" class="section">
+        <div class="section-heading">
+          <div class="section-num">11</div>
+          <h2 class="section-title">Tab bar</h2>
+        </div>
+        <p class="section-desc">Top-line tabs for page-level navigation. Bottom bar variant for mobile app chrome.</p>
+        <div class="demo-box ink-stack ink-stack-6">
+          <div>
+            <div class="demo-label">Top tabs</div>
+            <div class="ink-tabs">
+              <button class="ink-tab active">Weekly Review</button>
+              <button class="ink-tab">Explore</button>
+              <button class="ink-tab">Deals</button>
+              <button class="ink-tab">Indices</button>
+            </div>
+          </div>
+          <div>
+            <div class="demo-label">Bottom tab bar</div>
+            <div class="ink-tabbar">
+              <button class="ink-tab"><span class="ink-tab-icon">⊙</span>Colors</button>
+              <button class="ink-tab"><span class="ink-tab-icon">T</span>Type</button>
+              <button class="ink-tab active"><span class="ink-tab-icon">⊞</span>Components</button>
+              <button class="ink-tab"><span class="ink-tab-icon">☰</span>Utilities</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- UTILITIES -->
+      <section id="utilities" class="section">
+        <div class="section-heading">
+          <div class="section-num">12</div>
+          <h2 class="section-title">Utility classes</h2>
+        </div>
+        <p class="section-desc">Layout helpers, flex/grid shorthands, and text utilities.</p>
+        <div class="demo-box">
+          <table style="width:100%;border-collapse:collapse;font-size:11px">
+            <thead>
+              <tr style="border-bottom:2px solid var(--ink-black)">
+                <th style="text-align:left;padding:6px 0;font-size:9px;letter-spacing:.1em;text-transform:uppercase">Class</th>
+                <th style="text-align:left;padding:6px 0;font-size:9px;letter-spacing:.1em;text-transform:uppercase">Effect</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px dashed var(--ink-divider)"><td style="padding:7px 0;font-family:monospace">.ink-stack</td><td style="color:var(--ink-text-secondary)">flex column — use with .ink-stack-{2–8}</td></tr>
+              <tr style="border-bottom:1px dashed var(--ink-divider)"><td style="padding:7px 0;font-family:monospace">.ink-row-flex</td><td style="color:var(--ink-text-secondary)">flex row, align-items:center</td></tr>
+              <tr style="border-bottom:1px dashed var(--ink-divider)"><td style="padding:7px 0;font-family:monospace">.ink-grid-{2–4}</td><td style="color:var(--ink-text-secondary)">equal-column grid</td></tr>
+              <tr style="border-bottom:1px dashed var(--ink-divider)"><td style="padding:7px 0;font-family:monospace">.ink-truncate</td><td style="color:var(--ink-text-secondary)">single-line ellipsis</td></tr>
+              <tr style="border-bottom:1px dashed var(--ink-divider)"><td style="padding:7px 0;font-family:monospace">.ink-muted</td><td style="color:var(--ink-text-secondary)">color: --ink-500</td></tr>
+              <tr><td style="padding:7px 0;font-family:monospace">.ink-divider{-bold,-dashed}</td><td style="color:var(--ink-text-secondary)">horizontal rule in three weights</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+</div>
+</body>
+</html>
